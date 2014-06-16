@@ -1,0 +1,3 @@
+var searchIndex = {};
+searchIndex['floor'] = {"items":[[0,"","floor","Floor is supposed to be a simple and lightweight foundation for web applications written in Rust. Its API is inspired by the popular express framework for JavaScript."],[1,"Floor","","Floor is the application object. It's the surface that\nholds all public APIs."],[11,"router","","",0],[11,"server","","",0],[1,"Request","","A container for all the request data"],[11,"origin","","the original `http::server::Request`",1],[11,"params","","a `HashMap<String, String>` holding all params with names and values",1]],"paths":[[1,"Floor"],[1,"Request"]]};
+initSearch(searchIndex);

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The floor library documentation.">
+
+    <title>floor::Floor - Rust</title>
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro:400,600'
+          rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../main.css">
+
+    
+</head>
+<body>
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    <section class="sidebar">
+        
+        <p class='location'><a href='index.html'>floor</a></p><div class='block struct'><h2>Structs</h2><a class='struct current' href='struct.Floor.html'>Floor</a><a class='struct ' href='struct.Request.html'>Request</a></div>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Search documentation..."
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'>Struct <a href='index.html'>floor</a>::<a class='struct' href=''>Floor</a><a class='source' id='src-1960' href='../src/floor/src/floor.rs.html#14-17'>[src]</a></h1>
+<pre class='rust struct'>pub struct Floor {
+    // some fields omitted
+}</pre><div class='docblock'><p>Floor is the application object. It&#39;s the surface that
+holds all public APIs.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../floor/struct.Floor.html' title='floor::Floor'>Floor</a></code></h3><div class='methods'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../floor/struct.Floor.html' title='floor::Floor'>Floor</a></code></h4>
+<div class='docblock'><p>In order to use Floors API one first has to create an instance.</p>
+
+<h1 id="example" class='section-header'><a
+                           href="\#example">Example</a></h1><pre class='rust '>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>server</span> <span class='op'>=</span> <span class='ident'>Floor</span>::<span class='ident'>new</span>();
+</pre>
+</div><h4 id='method.get' class='method'><code>fn <a href='#method.get' class='fnname'>get</a>(&amp;mut self, uri: &amp;<a href='http://doc.rust-lang.org/std/primitive.str.html'>str</a>, handler: fn(request: <a class='struct' href='../floor/struct.Request.html' title='floor::Request'>Request</a>, response: &amp;mut <a class='struct' href='http://www.rust-ci.org/chris-morgan/rust-http/doc/http/server/response/struct.ResponseWriter.html' title='http::server::response::ResponseWriter'>ResponseWriter</a>))</code></h4>
+<div class='docblock'><p>Registers a handler to be used for a specific GET request.
+Handlers are assigned to paths and paths are allowed to contain
+variables and wildcards.</p>
+
+<h1 id="example-without-variables-and-wildcards" class='section-header'><a
+                           href="\#example-without-variables-and-wildcards">Example without variables and wildcards</a></h1><pre class='rust '>
+<span class='kw'>fn</span> <span class='ident'>handler</span> (<span class='ident'>request</span>: <span class='ident'>Request</span>, <span class='ident'>response</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ResponseWriter</span>) { 
+    <span class='ident'>response</span>.<span class='ident'>write</span>(<span class='string'>&quot;This matches /user&quot;</span>.<span class='ident'>as_bytes</span>()); 
+};
+<span class='ident'>server</span>.<span class='ident'>get</span>(<span class='string'>&quot;/user&quot;</span>, <span class='ident'>handler</span>);
+</pre>
+
+<h1 id="example-with-variables" class='section-header'><a
+                           href="\#example-with-variables">Example with variables</a></h1><pre class='rust '>
+<span class='kw'>fn</span> <span class='ident'>handler</span> (<span class='ident'>request</span>: <span class='ident'>Request</span>, <span class='ident'>response</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ResponseWriter</span>) {
+    <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>response</span>, <span class='string'>&quot;This is user: {}&quot;</span>, <span class='ident'>request</span>.<span class='ident'>params</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;userid&quot;</span>.<span class='ident'>to_string</span>()));
+};
+<span class='ident'>server</span>.<span class='ident'>get</span>(<span class='string'>&quot;/user/:userid&quot;</span>, <span class='ident'>handler</span>);
+</pre>
+
+<h1 id="example-with-simple-wildcard" class='section-header'><a
+                           href="\#example-with-simple-wildcard">Example with simple wildcard</a></h1><pre class='rust '>
+<span class='kw'>fn</span> <span class='ident'>handler</span> (<span class='ident'>request</span>: <span class='ident'>Request</span>, <span class='ident'>response</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ResponseWriter</span>) {
+    <span class='ident'>response</span>.<span class='ident'>write</span>(<span class='string'>&quot;This matches /user/list/4711 but not /user/extended/list/4711&quot;</span>.<span class='ident'>as_bytes</span>());  
+};
+<span class='ident'>server</span>.<span class='ident'>get</span>(<span class='string'>&quot;/user/*/:userid&quot;</span>, <span class='ident'>handler</span>);
+</pre>
+
+<h1 id="example-with-double-wildcard" class='section-header'><a
+                           href="\#example-with-double-wildcard">Example with double wildcard</a></h1><pre class='rust '>
+<span class='kw'>fn</span> <span class='ident'>handler</span> (<span class='ident'>request</span>: <span class='ident'>Request</span>, <span class='ident'>response</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ResponseWriter</span>) {
+    <span class='ident'>response</span>.<span class='ident'>write</span>(<span class='string'>&quot;This matches /user/list/4711 and also /user/extended/list/4711&quot;</span>.<span class='ident'>as_bytes</span>());  
+};
+<span class='ident'>server</span>.<span class='ident'>get</span>(<span class='string'>&quot;/user/**/:userid&quot;</span>, <span class='ident'>handler</span>);
+</pre>
+</div><h4 id='method.post' class='method'><code>fn <a href='#method.post' class='fnname'>post</a>(&amp;mut self, uri: &amp;<a href='http://doc.rust-lang.org/std/primitive.str.html'>str</a>, handler: fn(request: <a class='struct' href='../floor/struct.Request.html' title='floor::Request'>Request</a>, response: &amp;mut <a class='struct' href='http://www.rust-ci.org/chris-morgan/rust-http/doc/http/server/response/struct.ResponseWriter.html' title='http::server::response::ResponseWriter'>ResponseWriter</a>))</code></h4>
+<div class='docblock'><p>Registers a handler to be used for a specific POST request.</p>
+
+<h1 id="example-1" class='section-header'><a
+                           href="\#example-1">Example</a></h1><pre class='rust '>
+<span class='kw'>fn</span> <span class='ident'>handler</span> (<span class='ident'>request</span>: <span class='ident'>Request</span>, <span class='ident'>response</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ResponseWriter</span>) {
+    <span class='ident'>response</span>.<span class='ident'>write</span>(<span class='string'>&quot;This matches a POST request to /a/post/request&quot;</span>.<span class='ident'>as_bytes</span>());  
+};
+<span class='ident'>server</span>.<span class='ident'>post</span>(<span class='string'>&quot;/a/post/request&quot;</span>, <span class='ident'>handler</span>);
+</pre>
+
+<p>Take a look at <code>get(&amp;mut self, uri: &amp;str, handler: fn(request: request::Request, response: &amp;mut ResponseWriter))</code>
+for a more detailed description.</p>
+</div><h4 id='method.put' class='method'><code>fn <a href='#method.put' class='fnname'>put</a>(&amp;mut self, uri: &amp;<a href='http://doc.rust-lang.org/std/primitive.str.html'>str</a>, handler: fn(request: <a class='struct' href='../floor/struct.Request.html' title='floor::Request'>Request</a>, response: &amp;mut <a class='struct' href='http://www.rust-ci.org/chris-morgan/rust-http/doc/http/server/response/struct.ResponseWriter.html' title='http::server::response::ResponseWriter'>ResponseWriter</a>))</code></h4>
+<div class='docblock'><p>Registers a handler to be used for a specific PUT request.</p>
+
+<h1 id="example-2" class='section-header'><a
+                           href="\#example-2">Example</a></h1><pre class='rust '>
+<span class='kw'>fn</span> <span class='ident'>handler</span> (<span class='ident'>request</span>: <span class='ident'>Request</span>, <span class='ident'>response</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ResponseWriter</span>) {
+    <span class='ident'>response</span>.<span class='ident'>write</span>(<span class='string'>&quot;This matches a POST request to /a/put/request&quot;</span>.<span class='ident'>as_bytes</span>());  
+};
+<span class='ident'>server</span>.<span class='ident'>put</span>(<span class='string'>&quot;/a/put/request&quot;</span>, <span class='ident'>handler</span>);
+</pre>
+
+<p>Take a look at <code>get(&amp;mut self, uri: &amp;str, handler: fn(request: request::Request, response: &amp;mut ResponseWriter))</code>
+for a more detailed description.</p>
+</div><h4 id='method.delete' class='method'><code>fn <a href='#method.delete' class='fnname'>delete</a>(&amp;mut self, uri: &amp;<a href='http://doc.rust-lang.org/std/primitive.str.html'>str</a>, handler: fn(request: <a class='struct' href='../floor/struct.Request.html' title='floor::Request'>Request</a>, response: &amp;mut <a class='struct' href='http://www.rust-ci.org/chris-morgan/rust-http/doc/http/server/response/struct.ResponseWriter.html' title='http::server::response::ResponseWriter'>ResponseWriter</a>))</code></h4>
+<div class='docblock'><p>Registers a handler to be used for a specific DELETE request.</p>
+
+<h1 id="example-3" class='section-header'><a
+                           href="\#example-3">Example</a></h1><pre class='rust '>
+<span class='kw'>fn</span> <span class='ident'>handler</span> (<span class='ident'>request</span>: <span class='ident'>Request</span>, <span class='ident'>response</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ResponseWriter</span>) {
+    <span class='ident'>response</span>.<span class='ident'>write</span>(<span class='string'>&quot;This matches a DELETE request to /a/delete/request&quot;</span>.<span class='ident'>as_bytes</span>());  
+};
+<span class='ident'>server</span>.<span class='ident'>delete</span>(<span class='string'>&quot;/a/delete/request&quot;</span>, <span class='ident'>handler</span>);
+</pre>
+
+<p>Take a look at <code>get(&amp;mut self, uri: &amp;str, handler: fn(request: request::Request, response: &amp;mut ResponseWriter))</code>
+for a more detailed description.</p>
+</div><h4 id='method.listen' class='method'><code>fn <a href='#method.listen' class='fnname'>listen</a>(self, port: <a class='type' href='http://doc.rust-lang.org/std/io/net/ip/type.Port.html' title='std::io::net::ip::Port'>Port</a>)</code></h4>
+<div class='docblock'><p>Bind and listen for connections on the given host and port</p>
+
+<h1 id="example-4" class='section-header'><a
+                           href="\#example-4">Example</a></h1><pre class='rust '>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>server</span> <span class='op'>=</span> <span class='ident'>Floor</span>::<span class='ident'>new</span>();
+<span class='ident'>server</span>.<span class='ident'>listen</span>(<span class='number'>6767</span>);
+</pre>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='http://doc.rust-lang.org/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../floor/struct.Floor.html' title='floor::Floor'>Floor</a></code></h3><div class='methods'><h4 id='method.clone' class='method'><code>fn <a href='#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../floor/struct.Floor.html' title='floor::Floor'>Floor</a></code></h4>
+<h4 id='method.clone_from' class='method'><code>fn <a href='#tymethod.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&uarr;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&darr;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&\#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code> (or <code>str</code>), <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "floor";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script async src="../search-index.js"></script>
+</body>
+</html>
